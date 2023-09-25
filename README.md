@@ -1,2 +1,2 @@
 # SwiftUI-Weather
-Scratching the SwiftUI Views.
+Scratching SwiftUI's Views.
