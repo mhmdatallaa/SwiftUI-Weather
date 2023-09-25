@@ -11,6 +11,8 @@ struct ContentView: View {
     
     @State private var isNight = false
     
+    let data: [DayWeather]
+    
     var body: some View {
         ZStack {
             BackgroundView(isNight: $isNight)
@@ -21,25 +23,9 @@ struct ContentView: View {
                 MainWeatherStatusView(imageName: isNight ? "moon.stars.fill" : "cloud.sun.fill", temperature: 76)
                 
                 HStack(spacing: 20) {
-                    WeatherDayView(dayOfWeek: "TUE",
-                                   imageName: "cloud.sun.fill",
-                                   temperature: 74)
-                    
-                    WeatherDayView(dayOfWeek: "WED",
-                                   imageName: "sun.max.fill",
-                                   temperature: 80)
-                    
-                    WeatherDayView(dayOfWeek: "THE",
-                                   imageName: "wind.snow",
-                                   temperature: 55)
-                    
-                    WeatherDayView(dayOfWeek: "FRI",
-                                   imageName: "sunset.fill",
-                                   temperature: 60)
-                    
-                    WeatherDayView(dayOfWeek: "SAT",
-                                   imageName: "snow",
-                                   temperature: 25)
+                    ForEach(data, id: \.self) { dayWeather in
+                        WeatherDayView(data: dayWeather)
+                    }
                 }
                 
                 Spacer()
@@ -60,7 +46,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(data: DataFactory.getData())
     }
 }
 
@@ -109,22 +95,19 @@ struct MainWeatherStatusView: View {
 }
 
 struct WeatherDayView: View {
-    
-    let dayOfWeek: String
-    let imageName: String
-    let temperature: Int
+    let data: DayWeather
     
     var body: some View {
         VStack {
-            Text(dayOfWeek)
+            Text(data.day)
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(.white)
-            Image(systemName: imageName)
+            Image(systemName: data.imageName)
                 .renderingMode(.original)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
-            Text("\(temperature)°")
+            Text("\(data.temperature)°")
                 .font(.system(size: 28, weight: .medium))
                 .foregroundColor(.white)
         }
